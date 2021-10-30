@@ -5,9 +5,18 @@ const button = document.getElementById('button');
 const results = document.getElementById('results');
 let imgElements = [];
 let products = [];
-const selections = 9;
+let selections = 9;
 let clicks = 0;
 const totalClicks = 25;
+
+init();
+
+function init(){
+    generateImageElements();
+    initProducts();
+    renderImages();
+    container.addEventListener('click', handleProductClick);
+}
 
 
 function generateImageElements(){
@@ -47,6 +56,9 @@ function initProducts(){
     new product('unicorn');
     new product('water-can');
     new product('wine-glass');
+    if (selections > products.length) { 
+        selections = products.length;
+    }
 }
 
 function chooseRandom(){
@@ -127,8 +139,3 @@ function handleButtonClick(){
     button.removeEventListener('click', handleButtonClick);
     button.className = '';
 }
-
-generateImageElements();
-initProducts();
-renderImages();
-container.addEventListener('click', handleProductClick);
