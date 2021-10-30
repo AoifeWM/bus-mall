@@ -64,9 +64,9 @@ function initProducts(){
 function chooseRandom(){
     let randomNumbers = [];
     for(let i = 0; i < selections; i++){
-        let random = Math.round((Math.random() * products.length-1));
+        let random = Math.round(Math.random() * (products.length-1));
         while(randomNumbers.includes(random)){
-            random = Math.round((Math.random() * products.length-1));
+            random = Math.round(Math.random() * (products.length-1));
         }
         randomNumbers.push(random);
     }
