@@ -64,13 +64,11 @@ function initProducts(){
 function chooseRandom(){
     let randomNumbers = [];
     for(let i = 0; i < selections; i++){
-        let random = Math.round(Math.random() * (products.length - 1));
+        let random = Math.round((Math.random() * products.length-1));
         while(randomNumbers.includes(random)){
-            random = Math.round(Math.random() * (products.length - 1));
-            console.log('rerolled random as ' + random);
+            random = Math.round((Math.random() * products.length-1));
         }
         randomNumbers.push(random);
-        console.log(`array ${randomNumbers}`)
     }
     return randomNumbers;
 }
@@ -81,8 +79,6 @@ function renderImages(){
         imgElements[i].src = products[randomArray[i]].src;
         imgElements[i].alt = products[randomArray[i]].name;
         products[randomArray[i]].views++;
-        console.log(`array at render time is ${randomArray}`);
-        console.log(`rendered image ${products[randomArray[i]].name} at spot ${i} due to roll ${randomArray[i]}`);
     }
 }
 
