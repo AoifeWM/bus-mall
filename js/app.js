@@ -5,7 +5,7 @@ const button = document.getElementById('button');
 const results = document.getElementById('results');
 let imgElements = [];
 let products = [];
-let selections = 9;
+let selections = 3;
 let clicks = 0;
 const totalClicks = 25;
 
