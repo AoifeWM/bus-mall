@@ -63,3 +63,9 @@ h3 {
     border-radius: 0.5rem;
 }
 
+#results {
+    width: 800px;
+    height: 800px;
+    margin-left: 2rem;
+}
+
