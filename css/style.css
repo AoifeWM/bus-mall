@@ -38,7 +38,7 @@ h3 {
     border: 5px solid red;
 }
 
-#button {
+#resultsButton, #clearButton {
     display: inline-block;
     margin-left: 1rem;
     margin-top: 1rem;
@@ -47,7 +47,7 @@ h3 {
     border-radius: 0.5rem;
 }
 
-#button.clicks-allowed{
+#resultsButton.clicks-allowed, #clearButton.clicks-allowed {
     background-color: lightgreen;
     cursor: pointer;
 }

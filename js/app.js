@@ -1,7 +1,8 @@
 'use strict'
 
 const container = document.getElementById('productImages');
-const button = document.getElementById('button');
+const resultsButton = document.getElementById('resultsButton');
+const clearButton = document.getElementById('clearButton');
 const results = document.getElementById('results');
 let imgElements = [];
 let products = [];
@@ -19,7 +20,6 @@ function init(){
     container.addEventListener('click', handleProductClick);
 }
 
-
 function generateImageElements(){
     for(let i = 0; i < selections; i++){
         let img = document.createElement('img');
@@ -29,36 +29,55 @@ function generateImageElements(){
     }
 }
 
-function product(imageName, fileExtension = 'jpg'){
+function product(imageName, fileExtension = 'jpg', views = 0, likes = 0){
     this.name = imageName;
     this.src = `img/${imageName}.${fileExtension}`;
-    this.views = 0;
-    this.likes = 0;
+    this.fileExtension = fileExtension;
+    this.views = views;
+    this.likes = likes;
     products.push(this);
 }
 
 function initProducts(){
-    new product('bag');
-    new product('banana');
-    new product('bathroom');
-    new product('boots');
-    new product('breakfast');
-    new product('bubblegum');
-    new product('chair');
-    new product('cthulhu');
-    new product('dog-duck');
-    new product('dragon');
-    new product('pen');
-    new product('pet-sweep');
-    new product('scissors');
-    new product('shark');
-    new product('sweep', 'png');
-    new product('tauntaun');
-    new product('unicorn');
-    new product('water-can');
-    new product('wine-glass');
+    if(localStorage.getItem('products')){
+        retrieveProducts();
+        clearButton.className = 'clicks-allowed';
+        clearButton.addEventListener('click', handleClearButtonClick);
+    }else{
+        new product('bag');
+        new product('banana');
+        new product('bathroom');
+        new product('boots');
+        new product('breakfast');
+        new product('bubblegum');
+        new product('chair');
+        new product('cthulhu');
+        new product('dog-duck');
+        new product('dragon');
+        new product('pen');
+        new product('pet-sweep');
+        new product('scissors');
+        new product('shark');
+        new product('sweep', 'png');
+        new product('tauntaun');
+        new product('unicorn');
+        new product('water-can');
+        new product('wine-glass');
+    }
     if (selections > Math.floor(products.length/2)) { 
         selections = Math.floor(products.length/2);
+    }
+}
+
+function retrieveProducts(){
+    let retrieved = localStorage.getItem('products');
+    let parsed = JSON.parse(retrieved);
+    for (let prod of parsed){
+        let name = prod.name;
+        let fileExtension = prod.fileExtension;
+        let views = prod.views;
+        let likes = prod.likes;
+        new product(name, fileExtension, views, likes);
     }
 }
 
@@ -70,16 +89,8 @@ function chooseRandom(){
             randomNumbers.push(random);
         }
     }
-
     prev = randomNumbers;
     return randomNumbers;
-    // for(let i = 0; i < selections; i++){
-    //     let random = Math.round(Math.random() * (products.length - 1));
-    //     while(randomNumbers.includes(random)){
-    //         random = Math.round(Math.random() * (products.length - 1));
-    //     }
-    //     randomNumbers.push(random);
-    // }
 }
 
 function renderImages(){
@@ -112,48 +123,34 @@ function handleProductClick(event){
             imgElements[i].classList = '';
         }
         //make button clickable
-        button.addEventListener('click', handleButtonClick);
-        button.className = 'clicks-allowed';
+        resultsButton.addEventListener('click', handleResultsButtonClick);
+        resultsButton.className = 'clicks-allowed';
         return;
     }
     renderImages();
 }
 
-function handleButtonClick(){
-    // let ul = document.createElement('ul');
-    // results.appendChild(ul);
-    // for (let i = 0; i < products.length; i++){
-    //     let sView = 's';
-    //     if(products[i].views === 1){
-    //         sView = '';
-    //     }
-    //     let sLike = 's';
-    //     if(products[i].likes === 1){
-    //         sLike = '';
-    //     }
-    //     let percent = Math.round(100 * (products[i].likes/products[i].views));
-    //     let percentMessage = ` (${percent}% of the time it was available)`;
-    //     if(isNaN(percent)){
-    //         percentMessage = '';
-    //     }
+function handleClearButtonClick(){
+    localStorage.removeItem('products');
+    clearButton.className = '';
+    clearButton.removeEventListener('click', handleClearButtonClick);
+}
 
-    //     let li = document.createElement('li');
-    //     li.textContent = `${products[i].name} was viewed ${products[i].views} time${sView} and selected ${products[i].likes} time${sLike}${percentMessage}.`
-    //     ul.appendChild(li);
-    // }
+function handleResultsButtonClick(){
     let chartRawCanvas = document.createElement('canvas');
     let chartPercentCanvas = document.createElement('canvas');
     results.appendChild(chartRawCanvas);
     results.appendChild(chartPercentCanvas);
-    // chartRawCanvas.height = 200;
-    // chartPercentCanvas.height = 200;
-    // chartRawCanvas.width = 400;
-    // chartPercentCanvas.width = 400;
     const chartRaw = new Chart(chartRawCanvas, generateRawChartConfig());
     const chartPercent = new Chart(chartPercentCanvas, generatePercentChartConfig());
-    
-    button.removeEventListener('click', handleButtonClick);
-    button.className = '';
+    storeProducts();
+    resultsButton.removeEventListener('click', handleResultsButtonClick);
+    resultsButton.className = '';
+}
+
+function storeProducts(){
+    let stringifiedProducts = JSON.stringify(products);
+    localStorage.setItem('products', stringifiedProducts);
 }
 
 function generateRawChartConfig(){
@@ -244,4 +241,11 @@ function generatePercentChartConfig(){
     };
 
     return config;
+}
+
+function storeProducts(){
+    let stringifiedProducts = JSON.stringify(products);
+    localStorage.setItem('products', stringifiedProducts);
+    clearButton.className = 'clicks-allowed';
+    clearButton.addEventListener('click', handleClearButtonClick);
 }
